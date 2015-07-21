@@ -61,8 +61,8 @@ class cssllc_slack_integration {
 				if (method_exists(__CLASS__,str_replace('-','_',$action) . '_text')) {
 					$method = str_replace('-','_',$action) . '_text';
 					$payload['text'] = self::$method($args,$domain);
+					if (false === $payload['text']) return false;
 				}
-				if (false === self::$method($args,$domain)) return false;
 				if (!array_key_exists('text',$payload) || '' === $payload['text']) {
 					foreach ($args as $k => $v)
 						if (is_bool($v)) $args[$k] = $v ? 'true' : 'false';
