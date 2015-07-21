@@ -130,6 +130,10 @@ class cssllc_slack_integration {
 		}
 	}
 
+	private static function generate_rewrite_rules_text($args,$domain) {
+		return '*Rewrite rules generated* on <' . self::$site_url . '|' . $domain . '>';
+	}
+
 }
 
 //add_action('init','cssllc_init');
