@@ -67,7 +67,7 @@ class cssllc_slack_integration {
 					foreach ($args as $k => $v)
 						if (is_bool($v)) $args[$k] = $v ? 'true' : 'false';
 						else if (empty($v)) $args[$k] = 'EMPTY';
-					$payload['text'] = '*' . $action . '* on <' . self::$site_url . '|' . $domain . '>: ' . (1 == count($args) ? $args[0] : print_r($args,true));
+					$payload['text'] = '*' . $action . '* on <' . self::$site_url . '|' . $domain . '>: ' . (1 == count($args) ? (is_object($args[0]) || is_array($args[0]) ? print_r($args[0],true) : $args[0]) : print_r($args,true));
 				}
 
 				if (file_exists(get_template_directory() . '/slack.png'))
