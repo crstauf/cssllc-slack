@@ -13,7 +13,6 @@ class cssllc_slack_integration {
 	private static $site_url = '';
 	private static $api_url = 'https://hooks.slack.com/services/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';
 	private static $current_action = '';
-	private static $channel = false;
 
 	function __construct() {
 		self::$site_url = get_bloginfo('url');
@@ -56,8 +55,8 @@ class cssllc_slack_integration {
 
 				$payload = array();
 				$payload['username'] = 'wordpress-notifier';
-				if (false !== self::$channel)
-					$payload['channel'] = self::$channel;
+				$channel = apply_filters('cssllc_slack_channel',false);
+				if (false !== $channel) $payload['channel'] = $channel;
 
 				if (method_exists(__CLASS__,str_replace('-','_',$action) . '_text')) {
 					$method = str_replace('-','_',$action) . '_text';
