@@ -114,7 +114,7 @@ class cssllc_slack_integration {
 		if ('update_plugins' == $args[0]) {
 			$plugins = array();
 			foreach ($args[1]->response as $obj) {
-				if (!count($obj) || '' == $obj->plugin) continue;
+				if (!is_object($obj) || !count($obj) || !isset($obj->plugin) || '' == $obj->plugin) continue;
 				$plugin = get_plugin_data(ABSPATH . '/wp-content/plugins/' . $obj->plugin);
 				if ('' == $plugin['Name']) continue;
 				$plugins[] = $plugin['Name'];
