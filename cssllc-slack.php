@@ -114,10 +114,12 @@ class cssllc_slack_integration {
 		if ('update_plugins' == $args[0]) {
 			$plugins = array();
 			foreach ($args[1]->response as $obj) {
+				if (!count($obj) || '' == $obj->plugin) continue;
 				$plugin = get_plugin_data(ABSPATH . '/wp-content/plugins/' . $obj->plugin);
+				if ('' == $plugin['Name']) continue;
 				$plugins[] = $plugin['Name'];
 			}
-			return '*Plugin updates available* on <' . self::$site_url . '|' . $domain . '>: ' . "\n- " . implode("\n- ",$plugins);
+			return '*Plugin updates available* on <' . self::$site_url . '|' . $domain . '>' . (count($plugins) ? ":\n- " . implode("\n- ",$plugins) : '');
 		} else if ('update_themes' == $args[1]) {
 			$themes = array();
 			foreach ($args[1]->response as $obj) {
