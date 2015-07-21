@@ -63,7 +63,6 @@ class cssllc_slack_integration {
 					$payload['text'] = self::$method($args,$domain);
 				}
 				if (false === self::$method($args,$domains)) return false;
-				echo '<p>Sending notification of \'' . $action . '\'...</p>';
 				if (!array_key_exists('text',$payload) || '' === $payload['text']) {
 					foreach ($args as $k => $v)
 						if (is_bool($v)) $args[$k] = $v ? 'true' : 'false';
@@ -99,6 +98,7 @@ class cssllc_slack_integration {
 		}
 
 	private static function _core_updated_successfully_text($args,$domain) {
+		echo '<p>Sending notification...</p>';
 		return '*Core updated* on <' . self::$site_url . '|' . $domain . '> to v' . $args[0];
 	}
 
