@@ -145,15 +145,16 @@ class cssllc_slack_integration {
 		)
 			return $message;
 
-		if (
-			false !== stripos($message,'is a required field') ||
-			false !== stripos($message,'card number is invalid') ||
-			false !== stripos($message,'card expiration date') ||
-			false !== stripos($message,'card security code is invalid') ||
-			false !== stripos($message,'coupon code already applied') ||
-			false !== stripos($message,'coupon has expired')
-		)
-			if (apply_filters('cssllc_slack_override_message_send_wc_error',true,$message))
+		$exclude_messages = apply_filters('cssllc_slack_wc_exclude_messages',array(
+			'field_required' => 'is a required field',
+			      'card_num' => 'card number is invalid',
+			     'card_expr' => 'card expiration date',
+			      'car_code' => 'card security code is invalid',
+			'coupon_applied' => 'coupon code already applied',
+			'coupon_expired' => 'coupon has expired',
+		));
+		foreach ($excluded_messages as $msg)
+			if (false !== stripos($message,$msg))
 				return $message;
 
 		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
