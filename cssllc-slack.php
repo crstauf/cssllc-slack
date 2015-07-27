@@ -141,10 +141,19 @@ class cssllc_slack_integration {
 		if (
 			false === strpos($_SERVER['REQUEST_URI'],'cart') &&
 			false === strpos($_SERVER['REQUEST_URI'],'checkout') &&
-			apply_filters('cssllc_slack_send_wc_error',true,$message)
+			apply_filters('cssllc_slack_override_page_send_wc_error',true,$message)
 		)
 			return $message;
-			
+
+		if (
+			false !== stripos($message,'is a required field') ||
+			false !== stripos($message,'card number is invalid') ||
+			false !== stripos($message,'card expiration date') ||
+			false !== stripos($message,'card security code is invalid')
+		)
+			if (apply_filters('cssllc_slack_override_message_send_wc_error',true,$message))
+				return $message;
+
 		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
 		$payload = array();
 		$payload['text'] = 'WooCommerce error notice on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode($message) . '"';
