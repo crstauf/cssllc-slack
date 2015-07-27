@@ -16,6 +16,9 @@ class cssllc_slack_integration {
 
 	function __construct() {
 		self::$site_url = get_bloginfo('url');
+
+		add_filter('woocommerce_add_error',array(__CLASS__,'woocommerce_error_notice'),9999999999999);
+
 		$actions = array(
 			'activate_blog' => false,
 			'activated_plugin' => 2,
@@ -132,6 +135,28 @@ class cssllc_slack_integration {
 
 	private static function generate_rewrite_rules_text($args,$domain) {
 		return '*Rewrite rules generated* on <' . self::$site_url . '|' . $domain . '>';
+	}
+
+	private static function woocommerce_error_notice($message) {
+		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
+		$payload = array();
+		$payload['text'] = 'WooCommerce error notice on <' . self::$site_url . '|' . $domain . '>:' . "\n" . $message;
+		$payload['username'] = 'wordpress-notifier';
+		$channel = apply_filters('cssllc_slack_channel',false);
+		if (false !== $channel) $payload['channel'] = $channel;
+		if (file_exists(get_template_directory() . '/slack.png'))
+			$payload['icon_url'] = get_template_directory_uri() . '/slack.png';
+
+		$response = wp_remote_post(self::$api_url,array('body' => array('payload' => json_encode($payload))));
+
+		if ((is_wp_error($response) || '500' == $response['response']['code']) && array_key_exists('channel',$payload)) {
+			unset($payload['channel']);
+			wp_remote_post(self::$api_url,array(
+				'body' => array('payload' => json_encode($payload)),
+			));
+		}
+
+		return $message;
 	}
 
 }
