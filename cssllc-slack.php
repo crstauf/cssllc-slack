@@ -137,7 +137,7 @@ class cssllc_slack_integration {
 		return '*Rewrite rules generated* on <' . self::$site_url . '|' . $domain . '>';
 	}
 
-	private static function woocommerce_error_notice($message) {
+	public static function woocommerce_error_notice($message) {
 		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
 		$payload = array();
 		$payload['text'] = 'WooCommerce error notice on <' . self::$site_url . '|' . $domain . '>:' . "\n" . $message;
