@@ -156,7 +156,7 @@ class cssllc_slack_integration {
 
 		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
 		$payload = array();
-		$payload['text'] = 'WooCommerce error notice on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode($message) . '"';
+		$payload['text'] = '*WooCommerce error* on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode($message) . '"';
 		$payload['username'] = 'wordpress-notifier';
 		$channel = apply_filters('cssllc_slack_channel',false);
 		if (false !== $channel) $payload['channel'] = $channel;
