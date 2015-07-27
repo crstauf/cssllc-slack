@@ -153,7 +153,7 @@ class cssllc_slack_integration {
 			'coupon_applied' => 'coupon code already applied',
 			'coupon_expired' => 'coupon has expired',
 		));
-		foreach ($excluded_messages as $msg)
+		foreach ($exclude_messages as $msg)
 			if (false !== stripos($message,$msg))
 				return $message;
 
