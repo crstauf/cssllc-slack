@@ -138,6 +138,13 @@ class cssllc_slack_integration {
 	}
 
 	public static function woocommerce_error_notice($message) {
+		if (
+			false === strpos($_SERVER['REQUEST_URI'],'cart') &&
+			false === strpos($_SERVER['REQUEST_URI'],'checkout') &&
+			apply_filters('cssllc_slack_send_wc_error',true,$message)
+		)
+			return $message;
+			
 		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
 		$payload = array();
 		$payload['text'] = 'WooCommerce error notice on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode($message) . '"';
