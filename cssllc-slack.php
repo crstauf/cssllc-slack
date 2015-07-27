@@ -54,7 +54,7 @@ class cssllc_slack_integration {
 			add_action($action,function() {
 				$action = self::$current_action = current_filter();
 				$args = func_get_args();
-				$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
+				$domain = str_replace('https://','',str_replace('http://','',str_replace('www.','',self::$site_url)));
 
 				$payload = array();
 				$payload['username'] = 'wordpress-notifier';
