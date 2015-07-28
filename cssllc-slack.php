@@ -158,7 +158,7 @@ class cssllc_slack_integration {
 			if (false !== stripos(strip_tags($message),$msg))
 				return $message;
 
-		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
+		$domain = str_replace('https://','',str_replace('http://','',str_replace('www.','',self::$site_url)));
 		$payload = array();
 		$payload['text'] = '*WooCommerce error* on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode(strip_tags($message)) . '"';
 		$payload['username'] = 'wordpress-notifier';
