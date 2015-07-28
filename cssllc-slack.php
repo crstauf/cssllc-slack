@@ -79,10 +79,9 @@ class cssllc_slack_integration {
 					$method = str_replace('-','_',$action) . '_text';
 					$payload['text'] = self::$method($args,$domain);
 					if (false === $payload['text']) return false;
-				} else if (false !== strpos('woocommerce_settings_save_',$action) && method_exists(__CLASS__,'woocommerce_settings_save')) {
-					$method = 'woocommerce_settings_save';
-					$payload['text'] = self::$method($args,$domain);
-				}
+				} else if (false !== strpos($action,'woocommerce_settings_save_') && method_exists(__CLASS__,'woocommerce_settings_save_text'))
+					$payload['text'] = self::woocommerce_settings_save_text($args,$domain);
+
 				if (!array_key_exists('text',$payload) || '' === $payload['text']) {
 					foreach ($args as $k => $v)
 						if (is_bool($v)) $args[$k] = $v ? 'true' : 'false';
@@ -154,7 +153,7 @@ class cssllc_slack_integration {
 		return '*Rewrite rules generated* on <' . self::$site_url . '|' . $domain . '>';
 	}
 
-	private static function woocommerce_settings_save($args,$domain) {
+	private static function woocommerce_settings_save_text($args,$domain) {
 		return '*WooCommerce settings saved* on <' . self::$site_url . '|' . $domain . '>: ' . ucfirst(self::$current_action);
 	}
 
