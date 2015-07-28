@@ -149,7 +149,7 @@ class cssllc_slack_integration {
 			'field_required' => 'is a required field',
 			      'card_num' => 'card number is invalid',
 			     'card_expr' => 'card expiration date',
-			      card_code' => 'card security code is invalid',
+			     'card_code' => 'card security code is invalid',
 			   'card_verify' => 'credit card verification number',
 			'coupon_applied' => 'coupon code already applied',
 			'coupon_expired' => 'coupon has expired',
