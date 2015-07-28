@@ -50,6 +50,20 @@ class cssllc_slack_integration {
 			'wpmu_new_blog' => 2,
 			'_core_updated_successfully' => false,
 		);
+
+		foreach (array(
+			'general',
+			'products',
+			'tax',
+			'checkout',
+			'shipping',
+			'accounts',
+			'emails',
+			'integrations',
+			'webhooks'
+		) as $wc_action)
+			$actions['woocommerce_settings_save_' . $wc_action] = false;
+
 		foreach ($actions as $action => $num_args)
 			add_action($action,function() {
 				$action = self::$current_action = current_filter();
@@ -65,6 +79,9 @@ class cssllc_slack_integration {
 					$method = str_replace('-','_',$action) . '_text';
 					$payload['text'] = self::$method($args,$domain);
 					if (false === $payload['text']) return false;
+				} else if (false !== strpos('woocommerce_settings_save_',$action) && method_exists(__CLASS__,'woocommerce_settings_save')) {
+					$method = 'woocommerce_settings_save';
+					$payload['text'] = self::$method($args,$domain);
 				}
 				if (!array_key_exists('text',$payload) || '' === $payload['text']) {
 					foreach ($args as $k => $v)
@@ -135,6 +152,10 @@ class cssllc_slack_integration {
 
 	private static function generate_rewrite_rules_text($args,$domain) {
 		return '*Rewrite rules generated* on <' . self::$site_url . '|' . $domain . '>';
+	}
+
+	private static function woocommerce_settings_save($args,$domain) {
+		return '*WooCommerce settings saved* on <' . self::$site_url . '|' . $domain . '>: ' . ucfirst(self::$current_action);
 	}
 
 	public static function woocommerce_error_notice($message) {
