@@ -149,17 +149,18 @@ class cssllc_slack_integration {
 			'field_required' => 'is a required field',
 			      'card_num' => 'card number is invalid',
 			     'card_expr' => 'card expiration date',
-			      'car_code' => 'card security code is invalid',
+			      card_code' => 'card security code is invalid',
+			   'card_verify' => 'credit card verification number',
 			'coupon_applied' => 'coupon code already applied',
 			'coupon_expired' => 'coupon has expired',
 		));
 		foreach ($exclude_messages as $msg)
-			if (false !== stripos($message,$msg))
+			if (false !== stripos(strip_tags($message),$msg))
 				return $message;
 
 		$domain = str_replace('https://','',str_replace('http://','',self::$site_url));
 		$payload = array();
-		$payload['text'] = '*WooCommerce error* on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode($message) . '"';
+		$payload['text'] = '*WooCommerce error* on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode(strip_tags($message)) . '"';
 		$payload['username'] = 'wordpress-notifier';
 		$channel = apply_filters('cssllc_slack_channel',false);
 		if (false !== $channel) $payload['channel'] = $channel;
