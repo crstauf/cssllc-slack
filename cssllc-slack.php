@@ -154,7 +154,7 @@ class cssllc_slack_integration {
 	}
 
 	private static function woocommerce_settings_save_text($args,$domain) {
-		return '*WooCommerce settings saved* on <' . self::$site_url . '|' . $domain . '>: ' . ucfirst(self::$current_action);
+		return '*WooCommerce settings saved* on <' . self::$site_url . '|' . $domain . '>: ' . ucfirst(str_replace('woocommerce_settings_save_','',self::$current_action));
 	}
 
 	public static function woocommerce_error_notice($message) {
