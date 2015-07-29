@@ -177,6 +177,7 @@ class cssllc_slack_integration {
 			   'card_verify' => 'credit card verification number',
 			'coupon_applied' => 'coupon code already applied',
 			'coupon_expired' => 'coupon has expired',
+			 'email_invalid' => 'not a valid email address',
 		));
 		foreach ($exclude_messages as $msg)
 			if (false !== stripos(strip_tags($message),$msg))
