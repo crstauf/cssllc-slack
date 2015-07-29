@@ -142,14 +142,14 @@ class cssllc_slack_integration {
 				if ('' == $plugin['Name']) continue;
 				$plugins[] = $plugin['Name'];
 			}
-			return '*Plugin updates available* on <' . self::$site_url . '|' . $domain . '>' . (count($plugins) ? ":\n- " . implode("\n- ",$plugins) : '');
+			return '*Plugin updates (' . count($plugins) . ') available* on <' . self::$site_url . '|' . $domain . '>' . (count($plugins) ? ":\n- " . implode("\n- ",$plugins) : '');
 		} else if ('update_themes' == $args[1]) {
 			$themes = array();
 			foreach ($args[1]->response as $obj) {
 				$theme = wp_get_theme(ABSPATH . '/wp-content/themes/' . $obj->theme);
 				$themes[] = $theme->get('Name');
 			}
-			return '*Theme updates available* on <' . self::$site_url . '|' . $domain . '>: ' . "\n- " . implode("\n- ",$themes);
+			return '*Theme updates (' . count($themes) . ') available* on <' . self::$site_url . '|' . $domain . '>: ' . "\n- " . implode("\n- ",$themes);
 		}
 	}
 
