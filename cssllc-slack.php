@@ -132,6 +132,10 @@ class cssllc_slack_integration {
 		if (!in_array($args[0],array('update_themes','update_plugins')) || !is_array($args[1]->response) || !count($args[1]->response)) return false;
 		if (get_site_transient('cssllc_slack_' . $args[0]) == $args[1]->response) return false;
 
+		if (0 == count($args[1]->response)) {
+			delete_site_transient('cssllc_slack_' . $args[0]);
+			return false;
+		}
 		set_site_transient('cssllc_slack_' . $args[0],$args[1]->response,60*60*12);
 
 		if ('update_plugins' == $args[0]) {
