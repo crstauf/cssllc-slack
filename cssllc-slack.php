@@ -132,10 +132,6 @@ class cssllc_slack_integration {
 		if (!in_array($args[0],array('update_themes','update_plugins')) || !is_array($args[1]->response) || !count($args[1]->response)) return false;
 		if (get_site_transient('cssllc_slack_' . $args[0]) == $args[1]->response) return false;
 
-		if (0 == count($args[1]->response)) {
-			delete_site_transient('cssllc_slack_' . $args[0]);
-			return false;
-		}
 		set_site_transient('cssllc_slack_' . $args[0],$args[1]->response,60*60*12);
 
 		if ('update_plugins' == $args[0]) {
@@ -146,12 +142,21 @@ class cssllc_slack_integration {
 				if ('' == $plugin['Name']) continue;
 				$plugins[] = $plugin['Name'];
 			}
+			if (0 == count($plugins)) {
+				delete_site_transient('cssllc_slack_' . $args[0]);
+				return false;
+			}
 			return '*Plugin updates (' . count($plugins) . ') available* on <' . self::$site_url . '|' . $domain . '>' . (count($plugins) ? ":\n- " . implode("\n- ",$plugins) : '');
 		} else if ('update_themes' == $args[1]) {
 			$themes = array();
 			foreach ($args[1]->response as $obj) {
 				$theme = wp_get_theme(ABSPATH . '/wp-content/themes/' . $obj->theme);
+				if ('' == $theme->get('Name')) continue;
 				$themes[] = $theme->get('Name');
+			}
+			if (0 == count($themes)) {
+				delete_site_transient('cssllc_slack_' . $args[0]);
+				return false;
 			}
 			return '*Theme updates (' . count($themes) . ') available* on <' . self::$site_url . '|' . $domain . '>: ' . "\n- " . implode("\n- ",$themes);
 		}
