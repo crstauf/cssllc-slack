@@ -19,7 +19,7 @@ class cssllc_slack_integration {
 
 		add_filter('woocommerce_add_error',array(__CLASS__,'woocommerce_error_notice'),9999999999999);
 
-		$actions = array(
+		$actions = apply_filters('cssllc_slack_actions',array(
 			'activate_blog' => false,
 			'activated_plugin' => 2,
 			'after_db_upgrade' => false,
@@ -49,7 +49,7 @@ class cssllc_slack_integration {
 			'wpmu_activate_blog' => 2,
 			'wpmu_new_blog' => 2,
 			'_core_updated_successfully' => false,
-		);
+		));
 
 		foreach (array(
 			'general',
