@@ -184,6 +184,7 @@ class cssllc_slack_integration {
 			     'card_expr' => 'card expiration date',
 			     'card_code' => 'card security code is invalid',
 			   'card_verify' => 'credit card verification number',
+			    'card_valid' => 'enter a valid credit card number',
 			'coupon_applied' => 'coupon code already applied',
 			'coupon_expired' => 'coupon has expired',
 			 'email_invalid' => 'not a valid email address',
