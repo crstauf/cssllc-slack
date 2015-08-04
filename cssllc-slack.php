@@ -185,8 +185,7 @@ class cssllc_slack_integration {
 			     'card_code' => 'card security code is invalid',
 			   'card_verify' => 'credit card verification number',
 			    'card_valid' => 'enter a valid credit card number',
-			'coupon_applied' => 'coupon code already applied',
-			'coupon_expired' => 'coupon has expired',
+			        'coupon' => 'coupon',
 			 'email_invalid' => 'not a valid email address',
 		));
 		foreach ($exclude_messages as $msg)
