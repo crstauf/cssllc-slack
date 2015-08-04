@@ -186,7 +186,9 @@ class cssllc_slack_integration {
 			   'card_verify' => 'credit card verification number',
 			    'card_valid' => 'enter a valid credit card number',
 			        'coupon' => 'coupon',
+			 'no_user_email' => 'user could not be found with this email',
 			 'email_invalid' => 'not a valid email address',
+			  'item_amounts' => 'totals of the cart item amounts',
 		));
 		foreach ($exclude_messages as $msg)
 			if (false !== stripos(strip_tags($message),$msg))
