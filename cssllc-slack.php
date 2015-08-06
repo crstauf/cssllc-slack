@@ -124,6 +124,12 @@ class cssllc_slack_integration {
 	private static function upgrader_process_complete_text($args,$domain) {
 		if (is_object($args[0])) {
 			if ('Core_Upgrader' == get_class($args[0])) return false;
+			else if ('Plugin_Upgrader' == get_class($args[0])) {
+				$return = array();
+				foreach ($args as $plugin)
+					$return[] = $plugin->skin->plugin_info['Name'];
+				return '*Plugin update' . (1 == count($return) ? '' : 's') . ' complete* on <' . self::$site_url . '|' . $domain . '>:' . "\n" . implode(', ',$return);
+			}
 			return '*Update complete* on <' . self::$site_url . '|' . $domain . '>: ' . get_class($args[0]);
 		} else if (!is_object($args[0])) return '*Update complete* on <' . self::$site_url . '|' . $domain . '>: ' . print_r($args,true);
 	}
