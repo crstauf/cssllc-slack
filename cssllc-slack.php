@@ -194,7 +194,9 @@ class cssllc_slack_integration {
 			        'coupon' => 'coupon',
 			 'no_user_email' => 'user could not be found with this email',
 			 'email_invalid' => 'not a valid email address',
+			  'user_invalid' => 'invalid username',
 			  'item_amounts' => 'totals of the cart item amounts',
+			     'valid_zip' => 'enter a valid postcode',
 		));
 		foreach ($exclude_messages as $msg)
 			if (false !== stripos(strip_tags($message),$msg))
