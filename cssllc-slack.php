@@ -27,7 +27,6 @@ class cssllc_slack_integration {
 			'after_switch_theme' => false,
 			'archive_blog' => false,
 			'automatic_updates_complete' => false,
-			'core_upgrade_preamble' => false,
 			'deactivate_blog' => false,
 			'deactivated_plugin' => 2,
 			'generate_rewrite_rules' => false,
