@@ -134,7 +134,10 @@ class cssllc_slack_integration {
 	}
 
 	private static function setted_site_transient_text($args,$domain) {
-		if (!in_array($args[0],array('update_themes','update_plugins')) || !is_array($args[1]->response) || !count($args[1]->response)) return false;
+		if (
+			!in_array($args[0],array('update_themes','update_plugins')) ||
+			!isset($args[1]->response) || !is_array($args[1]->response) || !count($args[1]->response)
+		) return false;
 		if (get_site_transient('cssllc_slack_' . $args[0]) == $args[1]->response) return false;
 
 		set_site_transient('cssllc_slack_' . $args[0],$args[1]->response,60*60*12);
