@@ -199,6 +199,7 @@ class cssllc_slack_integration {
 			  'user_invalid' => 'invalid username',
 			     'valid_zip' => 'enter a valid postcode',
 			   'valid_phone' => 'not a valid phone number',
+			      'password' => 'lost your password',
 		));
 		foreach ($exclude_messages as $msg)
 			if (false !== stripos(strip_tags($message),$msg))
