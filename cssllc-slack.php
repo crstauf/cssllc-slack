@@ -10,9 +10,9 @@ Description: Integration plugin for WordPress projects to Slack
 new cssllc_slack_integration;
 class cssllc_slack_integration {
 
-	private static $site_url = '';
-	private static $api_url = 'https://hooks.slack.com/services/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';
-	private static $current_action = '';
+	public static $site_url = '';
+	public static $api_url = 'https://hooks.slack.com/services/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';
+	public static $current_action = '';
 
 	function __construct() {
 		self::$site_url = get_bloginfo('url');
@@ -65,9 +65,9 @@ class cssllc_slack_integration {
 
 		foreach ($actions as $action => $num_args)
 			add_action($action,function() {
-				$action = self::$current_action = current_filter();
+				$action = cssllc_slack_integration::$current_action = current_filter();
 				$args = func_get_args();
-				$domain = str_replace('https://','',str_replace('http://','',str_replace('www.','',self::$site_url)));
+				$domain = str_replace('https://','',str_replace('http://','',str_replace('www.','',cssllc_slack_integration::$site_url)));
 
 				$payload = array();
 				$payload['username'] = 'wordpress-notifier';
@@ -76,51 +76,51 @@ class cssllc_slack_integration {
 
 				if (method_exists(__CLASS__,str_replace('-','_',$action) . '_text')) {
 					$method = str_replace('-','_',$action) . '_text';
-					$payload['text'] = self::$method($args,$domain);
+					$payload['text'] = cssllc_slack_integration::$method($args,$domain);
 					if (false === $payload['text']) return false;
-				} else if (false !== strpos($action,'woocommerce_settings_save_') && method_exists(__CLASS__,'woocommerce_settings_save_text'))
-					$payload['text'] = self::woocommerce_settings_save_text($args,$domain);
+				} else if (false !== strpos($action,'woocommerce_settings_save_') && method_exists('cssllc_slack_integration','woocommerce_settings_save_text'))
+					$payload['text'] = cssllc_slack_integration::woocommerce_settings_save_text($args,$domain);
 
 				if (!array_key_exists('text',$payload) || '' === $payload['text']) {
 					foreach ($args as $k => $v)
 						if (is_bool($v)) $args[$k] = $v ? 'true' : 'false';
 						else if (empty($v)) $args[$k] = 'EMPTY';
-					$payload['text'] = '*' . $action . '* on <' . self::$site_url . '|' . $domain . '>: ' . (1 == count($args) ? (is_object($args[0]) || is_array($args[0]) ? print_r($args[0],true) : $args[0]) : print_r($args,true));
+					$payload['text'] = '*' . $action . '* on <' . cssllc_slack_integration::$site_url . '|' . $domain . '>: ' . (1 == count($args) ? (is_object($args[0]) || is_array($args[0]) ? print_r($args[0],true) : $args[0]) : print_r($args,true));
 				}
 
 				if (file_exists(get_template_directory() . '/slack.png'))
 					$payload['icon_url'] = get_template_directory_uri() . '/slack.png';
 
-				$response = wp_remote_post(self::$api_url,array('body' => array('payload' => json_encode($payload))));
+				$response = wp_remote_post(cssllc_slack_integration::$api_url,array('body' => array('payload' => json_encode($payload))));
 
 				if ((is_wp_error($response) || '500' == $response['response']['code']) && array_key_exists('channel',$payload)) {
 					unset($payload['channel']);
-					wp_remote_post(self::$api_url,array(
+					wp_remote_post(cssllc_slack_integration::$api_url,array(
 						'body' => array('payload' => json_encode($payload)),
 					));
 				}
 			},9999999999999,($num_args ?: 1));
 	}
 
-	private static function plugin_text($args,$domain) {
+	public static function plugin_text($args,$domain) {
 		$plugin_data = get_plugin_data(ABSPATH . '/wp-content/plugins/' . $args[0]);
 		return ' \'' . $plugin_data['Name'] . '\' on <' . self::$site_url . '|' . $domain . '>';
 	}
 
-		private static function activated_plugin_text($args,$domain) {
+		public static function activated_plugin_text($args,$domain) {
 			return '*' . (true === $args[1] ? 'Network a' : 'A') . 'ctivated plugin*' . self::plugin_text($args,$domain);
 		}
 
-		private static function deactivated_plugin_text($args,$domain) {
+		public static function deactivated_plugin_text($args,$domain) {
 			return '*' . (true === $args[1] ? 'Network d' : 'D') . 'eactivated plugin*' . self::plugin_text($args,$domain);
 		}
 
-	private static function _core_updated_successfully_text($args,$domain) {
+	public static function _core_updated_successfully_text($args,$domain) {
 		echo '<p>Sending notification...</p>';
 		return '*Core updated* on <' . self::$site_url . '|' . $domain . '> to v' . $args[0];
 	}
 
-	private static function upgrader_process_complete_text($args,$domain) {
+	public static function upgrader_process_complete_text($args,$domain) {
 		if (is_object($args[0])) {
 			if ('Core_Upgrader' == get_class($args[0])) return false;
 			else if ('Plugin_Upgrader' == get_class($args[0])) {
@@ -133,7 +133,7 @@ class cssllc_slack_integration {
 		} else if (!is_object($args[0])) return '*Update complete* on <' . self::$site_url . '|' . $domain . '>: ' . print_r($args,true);
 	}
 
-	private static function setted_site_transient_text($args,$domain) {
+	public static function setted_site_transient_text($args,$domain) {
 		if (
 			!in_array($args[0],array('update_themes','update_plugins')) ||
 			!isset($args[1]->response) || !is_array($args[1]->response) || !count($args[1]->response)
@@ -170,11 +170,11 @@ class cssllc_slack_integration {
 		}
 	}
 
-	private static function generate_rewrite_rules_text($args,$domain) {
+	public static function generate_rewrite_rules_text($args,$domain) {
 		return '*Rewrite rules generated* on <' . self::$site_url . '|' . $domain . '>';
 	}
 
-	private static function woocommerce_settings_save_text($args,$domain) {
+	public static function woocommerce_settings_save_text($args,$domain) {
 		return '*WooCommerce settings saved* on <' . self::$site_url . '|' . $domain . '>: ' . ucfirst(str_replace('woocommerce_settings_save_','',self::$current_action));
 	}
 
