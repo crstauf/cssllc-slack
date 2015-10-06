@@ -282,10 +282,7 @@ class cssllc_slack {
 							if ('' == $plugin['Name']) continue;
 							$plugins[] = $plugin['Name'];
 						}
-						if (0 == count($plugins)) {
-							delete_site_transient('cssllc_slack_' . $working_action);
-							return false;
-						}
+						if (0 == count($plugins)) return false;
 
 						return $wrap . 'Plugin ' . _n('update','updates',count($plugins)) . '(' . count($plugins) . ')' . $wrap;
 
@@ -297,10 +294,7 @@ class cssllc_slack {
 							if ('' == $theme->get('Name')) continue;
 							$themes[] = $theme->get('Name');
 						}
-						if (0 == count($themes)) {
-							delete_site_transient('cssllc_slack_' . $working_action);
-							return false;
-						}
+						if (0 == count($themes)) return false;
 
 						return $wrap . 'Theme ' . _n('update','updates',count($themes)) . '(' . count($themes) . ')' . $wrap;
 
