@@ -7,6 +7,8 @@ Description: Integration plugin for WordPress projects to Slack
     Version: 0.0.2
 **/
 
+register_deactivation_hook(__FILE__,array('cssllc_slack','on_deactivation'));
+
 new cssllc_slack;
 class cssllc_slack {
 
@@ -502,6 +504,18 @@ class cssllc_slack {
 				))
 			);
 		}
+	}
+
+	public static function on_deactivation() {
+		if (!current_user_can('activate_plugins'))
+            return;
+        $plugin = isset($_REQUEST['plugin']) ? $_REQUEST['plugin'] : '';
+        check_admin_referer("deactivate-plugin_{$plugin}");
+
+		$user = wp_get_current_user();
+
+		$site = apply_filters('cssllc_slack_post_site',get_bloginfo('url'),'deactivating_cssllc_slack_plugin');
+		self::push_post(array('text' => '*CSSLLC Slack plugin deactivated*' . $site . ' by ' . $user->user_login));
 	}
 
 }
