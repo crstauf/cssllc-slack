@@ -220,6 +220,9 @@ class cssllc_slack {
 
 					if (get_site_transient('cssllc_slack_' . $working_action) === $args->response)
 						return true;
+
+					set_site_transient('cssllc_slack_' . $working_action,$args->response,60*60*24*3);
+
 					break;
 
 				case 'upgrader_process_complete':
