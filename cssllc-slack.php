@@ -185,7 +185,7 @@ class cssllc_slack {
 		if (false === $site)
 			$site = apply_filters('cssllc_slack_post_site',get_bloginfo('url'),cssllc_slack::$current_hook,cssllc_slack::$current_args);
 		if (false === $body)
-			$body = apply_filters('cssllc_slack_post_body',cssllc_slack::$current_args,cssllc_slack::$current_hook);
+			$body = apply_filters('cssllc_slack_post_body','',cssllc_slack::$current_hook,cssllc_slack::$current_args);
 
 		return apply_filters('cssllc_slack_post_' . cssllc_slack::$current_hook,
 			apply_filters('cssllc_slack_post',
@@ -199,7 +199,7 @@ class cssllc_slack {
 		add_filter('cssllc_slack_record',array(__CLASS__,'filter_record'),10,3);
 		add_filter('cssllc_slack_post_title',array(__CLASS__,'filter_title'),10,2);
 		add_filter('cssllc_slack_post_site',array(__CLASS__,'filter_generate_site_link'),1);
-		add_filter('cssllc_slack_post_body',array(__CLASS__,'filter_body'),10,2);
+		add_filter('cssllc_slack_post_body',array(__CLASS__,'filter_body'),10,3);
 	}
 
 		public static function filter_cancel($bool,$hook,$args) {
@@ -335,7 +335,7 @@ class cssllc_slack {
 			return ' on <' . $siteurl . '|' . $domain . '>';
 		}
 
-		public static function filter_body($args,$action) {
+		public static function filter_body($text,$action,$args) {
 			$wrap = apply_filters('cssllc_slack_wrap_body_' . cssllc_slack::$current_hook,
 				apply_filters('cssllc_slack_wrap_body',
 					cssllc_slack::$wrap_body
@@ -391,7 +391,7 @@ class cssllc_slack {
 			if (is_array($args) || is_object($args))
 				return ": \n" . $wrap . print_r($args,true) . $wrap;
 
-			return $args;
+			return $text;
 		}
 
 		public static function woocommerce_error_notice($message) {
