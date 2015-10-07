@@ -440,7 +440,7 @@ class cssllc_slack {
 			if (array_key_exists($action,cssllc_slack::$children))
 				foreach (cssllc_slack::$children[$action] as $parent)
 					if (array_key_exists($parent,$record))
-						unset($record[$children]);
+						unset($record[$action]);
 
 		if (!count($record)) return false;
 
