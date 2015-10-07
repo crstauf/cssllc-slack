@@ -61,11 +61,6 @@ class cssllc_slack {
 			'woocommerce_settings_save_emails' => false,
 			'woocommerce_settings_save_integrations' => false,
 			'woocommerce_settings_save_webhooks' => false,
-			'save_post' => 3,
-			'updated_postmeta' => array(
-				'num_args' => 4,
-				'parents' => array('save_post'),
-			),
 		));
 
 		$filters = apply_filters('cssllc_slack_filters',array(
