@@ -255,7 +255,7 @@ class cssllc_slack {
 			switch ($action) {
 				case 'activated_plugin':
 				case 'deactivated_plugin':
-					return $wrap . (true === $args[1] ? 'Network ' : '') . ucfirst(str_replace('_',' ',$action)) . (is_array($args) && 1 < count($args) ? 's' : '') . $wrap;
+					return $wrap . (isset($args[1]) && true === $args[1] ? 'Network ' : '') . ucfirst(str_replace('_',' ',$action)) . (is_array($args) && 1 < count($args) ? 's' : '') . $wrap;
 
 				case 'after_db_upgrade':
 					return $wrap . 'Database upgraded' . $wrap;
