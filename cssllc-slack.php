@@ -263,9 +263,6 @@ class cssllc_slack {
 				case 'generate_rewrite_rules':
 					return $wrap . 'Rewrite rules generated' . $wrap;
 
-				case 'save_post':
-					return $wrap . 'Post saved' . $wrap;
-
 				case 'set_site_transient_update_themes':
 				case 'set_site_transient_update_plugins':
 					$working_action = str_replace('set_site_transient_','',$action);
@@ -343,9 +340,6 @@ class cssllc_slack {
 			,cssllc_slack::$current_args);
 
 			switch ($action) {
-				case 'save_post':
-					return ': <' . $args[0][1]->guid . '|' . $args[0][1]->post_title . '>';
-
 				case 'activated_plugin':
 				case 'deactivated_plugin':
 					if (!is_array($args[0]) && count($args[0]))
@@ -451,10 +445,6 @@ class cssllc_slack {
 		if (!count($record)) return false;
 
 		foreach ($record as $action => $args) {
-			if (array_key_exists($action,cssllc_slack::$children))
-				foreach (cssllc_slack::$children[$action] as $parent)
-					if (array_key_exists($parent,$record))
-						unset($record[$children]);
 			self::$current_hook = $action;
 			self::$current_args = $args;
 			$payload = array('text' => cssllc_slack::text());
