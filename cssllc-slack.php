@@ -232,6 +232,26 @@ class cssllc_slack {
 						false === strpos($_SERVER['REQUEST_URI'],'checkout')
 					)
 						return true;
+
+					$exclude_messages = apply_filters('cssllc_slack_wc_exclude_messages',array(
+						'field_required' => 'is a required field',
+							  'card_num' => 'card number is invalid',
+							 'card_expr' => 'card expiration date',
+							 'card_code' => 'card security code is invalid',
+						   'card_verify' => 'credit card verification number',
+							'card_valid' => 'enter a valid credit card number',
+								'coupon' => 'coupon',
+						 'no_user_email' => 'user could not be found with this email',
+						 'email_invalid' => 'not a valid email address',
+						  'user_invalid' => 'invalid username',
+							 'valid_zip' => 'enter a valid postcode',
+						   'valid_phone' => 'not a valid phone number',
+							  'password' => 'lost your password',
+					));
+
+					foreach ($exclude_messages as $message)
+						if (false !== stripos(strip_tags($args[0]),$message))
+							return true;
 			}
 
 			return $bool;
@@ -312,6 +332,9 @@ class cssllc_slack {
 				case 'woocommerce_settings_save_webhooks':
 					return $wrap . 'WooCommerce settings saved' . $wrap;
 
+				case 'woocommerce_add_error':
+					return $wrap . 'WooCommerce error' . $wrap;
+
 				case '_core_updated_successfully':
 					echo '<p>Sending notification...</p>';
 					return $wrap . 'Core updated to v' . $args[0] . $wrap;
@@ -376,6 +399,9 @@ class cssllc_slack {
 				case 'woocommerce_settings_save_webhooks':
 					return ': ' . ucfirst(str_replace('woocommerce_settings_save_','',self::$current_hook));
 
+				case 'woocommerce_add_error':
+					return ': ' . strip_tags($args[0]);
+
 				case '_core_updated_successfully':
 				case 'after_db_upgrade':
 				case 'generate_rewrite_rules':
@@ -386,48 +412,6 @@ class cssllc_slack {
 				return ": \n" . $wrap . print_r($args,true) . $wrap;
 
 			return $text;
-		}
-
-		public static function woocommerce_error_notice($message) {
-
-			$exclude_messages = apply_filters('cssllc_slack_wc_exclude_messages',array(
-				'field_required' => 'is a required field',
-					  'card_num' => 'card number is invalid',
-					 'card_expr' => 'card expiration date',
-					 'card_code' => 'card security code is invalid',
-				   'card_verify' => 'credit card verification number',
-					'card_valid' => 'enter a valid credit card number',
-						'coupon' => 'coupon',
-				 'no_user_email' => 'user could not be found with this email',
-				 'email_invalid' => 'not a valid email address',
-				  'user_invalid' => 'invalid username',
-					 'valid_zip' => 'enter a valid postcode',
-				   'valid_phone' => 'not a valid phone number',
-					  'password' => 'lost your password',
-			));
-			foreach ($exclude_messages as $msg)
-				if (false !== stripos(strip_tags($message),$msg))
-					return $message;
-
-			$domain = str_replace('https://','',str_replace('http://','',str_replace('www.','',self::$site_url)));
-			$payload = array();
-			$payload['text'] = '*WooCommerce error* on <' . self::$site_url . '|' . $domain . '>:' . "\n\"" . html_entity_decode(strip_tags($message)) . '"';
-			$payload['username'] = 'wordpress-notifier';
-			$channel = apply_filters('cssllc_slack_channel',false);
-			if (false !== $channel) $payload['channel'] = $channel;
-			if (file_exists(get_template_directory() . '/slack.png'))
-				$payload['icon_url'] = get_template_directory_uri() . '/slack.png';
-
-			$response = wp_remote_post(self::$api_url,array('body' => array('payload' => json_encode($payload))));
-
-			if ((is_wp_error($response) || '500' == $response['response']['code']) && array_key_exists('channel',$payload)) {
-				unset($payload['channel']);
-				wp_remote_post(self::$api_url,array(
-					'body' => array('payload' => json_encode($payload)),
-				));
-			}
-
-			return $message;
 		}
 
 	public static function push_record() {
