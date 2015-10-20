@@ -408,7 +408,7 @@ class cssllc_slack {
 					return '';
 			}
 
-			if (is_array($args) || is_object($args))
+			if ('' === $text && (is_array($args) || is_object($args)))
 				return ": \n" . $wrap . print_r($args,true) . $wrap;
 
 			return $text;
