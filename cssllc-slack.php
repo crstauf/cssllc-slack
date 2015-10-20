@@ -132,7 +132,7 @@ class cssllc_slack {
 		$filter = current_filter();
 		$args = func_get_args();
 
-		$args = apply_filters('cssllc_slack_args_' . $action,
+		$args = apply_filters('cssllc_slack_args_' . $filter,
 			apply_filters('cssllc_slack_args',
 				$args
 			,$filter,$args)
