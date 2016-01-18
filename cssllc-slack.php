@@ -78,7 +78,7 @@ class cssllc_slack {
 			}
 
 		foreach ($actions as $action => $args) {
-			$num_args = is_array($args) ? $args['num_args'] : $args;
+			$num_args = is_array($args) ? (array_key_exists('num_args',$args) ? $args['num_args'] : false) : $args;
 			add_action($action,array(__CLASS__,'action'),9999999999999,($num_args ?: 1));
 		}
 
