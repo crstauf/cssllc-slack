@@ -372,8 +372,11 @@ class cssllc_slack {
 
 					$return = array();
 					foreach ($plugins as $plugin) {
-						$data = get_plugin_data(ABSPATH . '/wp-content/plugins/' . $plugin[0]);
-						$return[] = $data['Name'];
+						if (function_exists('get_plugin_data')) {
+							$data = get_plugin_data(ABSPATH . '/wp-content/plugins/' . $plugin[0]);
+							$return[] = $data['Name'];
+						} else
+							$return[] = $plugin[0];
 					}
 					return ': ' . (1 < count($plugins) ? "\n •" : '') . implode("\n• ",$return);
 
