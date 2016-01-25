@@ -143,7 +143,7 @@ class cssllc_slack {
 				false
 			,$filter,$args)
 		,$args))
-			return;
+			return $args[0];
 
 		cssllc_slack::$current_hook = $filter;
 		cssllc_slack::$current_args = $args;
@@ -154,13 +154,15 @@ class cssllc_slack {
 			,$filter,$args)
 		,$args)) {
 			cssllc_slack::record($filter,$args);
-			return;
+			return $args[0];
 		}
 
 		$payload = array('text' => cssllc_slack::text());
 
 		if (false !== $payload['text'])
 			cssllc_slack::push_post($payload);
+
+		return $args[0];
 	}
 
 	public static function record() {
