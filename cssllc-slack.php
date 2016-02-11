@@ -9,6 +9,9 @@ Description: Integration plugin for WordPress projects to Slack
 
 register_deactivation_hook(__FILE__,array('cssllc_slack','on_deactivation'));
 
+set_error_handler(array('cssllc_slack','php_error'),E_ALL);
+register_shutdown_function(array('cssllc_slack','shutdown'));
+
 new cssllc_slack;
 class cssllc_slack {
 
@@ -164,6 +167,74 @@ class cssllc_slack {
 
 		return $args[0];
 	}
+
+	public static function php_error($errno,$errstr,$errfile,$errline) {
+
+		$error_type = self::getFriendlyError($errno);
+
+		$payload['text'] = 'PHP Error on ' . get_bloginfo('url');
+		$payload['attachments'] = array(array(
+			'fallback' => $error_type . ' in ' . $errfile . ':' . $errline,
+			'color' => 'danger',
+			'fields' => array(
+				array(
+					'title' => 'File:Line',
+					'value' => $errfile . ':' . $errline,
+				),
+				array(
+					'title' => 'Type',
+					'value' => $error_type,
+					'short' => true,
+				),
+			))
+		);
+
+		self::push_post($payload);
+
+		return false;
+	}
+
+	public static function shutdown() {
+		$error = error_get_last();
+		if (NULL !== $error && is_array($error) && E_ERROR == $error['type'])
+			self::php_error($error['type'],$error['message'],$error['file'],$error['line']);
+	}
+
+		public static function getFriendlyError($type) {
+			switch ($type) {
+				case E_ERROR: // 1 //
+					return 'E_ERROR';
+				case E_WARNING: // 2 //
+					return 'E_WARNING';
+				case E_PARSE: // 4 //
+					return 'E_PARSE';
+				case E_NOTICE: // 8 //
+					return 'E_NOTICE';
+				case E_CORE_ERROR: // 16 //
+					return 'E_CORE_ERROR';
+				case E_CORE_WARNING: // 32 //
+					return 'E_CORE_WARNING';
+				case E_COMPILE_ERROR: // 64 //
+					return 'E_COMPILE_ERROR';
+				case E_COMPILE_WARNING: // 128 //
+					return 'E_COMPILE_WARNING';
+				case E_USER_ERROR: // 256 //
+					return 'E_USER_ERROR';
+				case E_USER_WARNING: // 512 //
+					return 'E_USER_WARNING';
+				case E_USER_NOTICE: // 1024 //
+					return 'E_USER_NOTICE';
+				case E_STRICT: // 2048 //
+					return 'E_STRICT';
+				case E_RECOVERABLE_ERROR: // 4096 //
+					return 'E_RECOVERABLE_ERROR';
+				case E_DEPRECATED: // 8192 //
+					return 'E_DEPRECATED';
+				case E_USER_DEPRECATED: // 16384 //
+					return 'E_USER_DEPRECATED';
+			}
+			return "";
+		}
 
 	public static function record() {
 		$record = $orig = get_site_transient('cssllc_slack_record');
