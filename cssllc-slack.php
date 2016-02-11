@@ -4,7 +4,7 @@ Plugin Name: CSS LLC Slack Integration
 Description: Integration plugin for WordPress projects to Slack
      Author: Caleb Stauffer Style, LLC
  Author URI: http://develop.calebstauffer.com
-    Version: 0.0.2
+    Version: 0.0.3
 **/
 
 register_deactivation_hook(__FILE__,array('cssllc_slack','on_deactivation'));
