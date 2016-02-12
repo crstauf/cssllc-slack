@@ -178,6 +178,10 @@ class cssllc_slack {
 			'color' => 'danger',
 			'fields' => array(
 				array(
+					'title' => 'Message',
+					'value' => $errstr,
+				),
+				array(
 					'title' => 'File:Line',
 					'value' => $errfile . ':' . $errline,
 				),
