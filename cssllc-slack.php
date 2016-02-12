@@ -169,7 +169,7 @@ class cssllc_slack {
 	}
 
 	public static function php_error($errno,$errstr,$errfile,$errline) {
-
+		if (E_DEPRECATED === $errno) return false;
 		$error_type = self::getFriendlyError($errno);
 
 		$payload['text'] = 'PHP Error on ' . get_bloginfo('url');
