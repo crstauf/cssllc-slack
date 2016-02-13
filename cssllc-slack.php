@@ -9,8 +9,10 @@ Description: Integration plugin for WordPress projects to Slack
 
 register_deactivation_hook(__FILE__,array('cssllc_slack','on_deactivation'));
 
-set_error_handler(array('cssllc_slack','php_error'),E_ALL);
-register_shutdown_function(array('cssllc_slack','shutdown'));
+if (apply_filters('cssllc_slack_php_errors',false)) {
+	set_error_handler(array('cssllc_slack','php_error'),E_ALL);
+	register_shutdown_function(array('cssllc_slack','shutdown'));
+}
 
 new cssllc_slack;
 class cssllc_slack {
